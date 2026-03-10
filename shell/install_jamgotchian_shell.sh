@@ -30,7 +30,7 @@ signfile $SHELL
 SCRIPT_DIR=$(dirname "$(readlink -f "$0")")
 
 echo "Do you want $SHELL to source: "
-for file in "${SCRIPT_DIR}/dot-config/shell"/*; do
+for file in "${SCRIPT_DIR}/.config/shell"/*; do
     if [ -f "$file" ]; then
         filename=$(basename "$file")
         if ask "${filename}?"; then
