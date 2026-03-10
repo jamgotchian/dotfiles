@@ -17,12 +17,20 @@ function signfile() {
     echo '# ---------------------- jamgotchian:dotfiles install --------------------' >>$1
 }
 
-SHELL=${HOME}/.bashrc
+# Apply based on which shell is running
+if [ -n "$ZSH_VERSION" ]; then
+    SHELL=${HOME}/.zshrc
+elif [ -n "$BASH_VERSION" ]; then
+    SHELL=${HOME}/.bashrc
+fi
 echo >>$SHELL
 signfile $SHELL
 
+# Get the directory of the script
+SCRIPT_DIR=$(dirname "$(readlink -f "$0")")
+
 echo "Do you want $SHELL to source: "
-for file in "shell"/*; do
+for file in "${SCRIPT_DIR}/dot-config/shell"/*; do
     if [ -f "$file" ]; then
         filename=$(basename "$file")
         if ask "${filename}?"; then
@@ -32,18 +40,3 @@ for file in "shell"/*; do
 done
 
 signfile $SHELL
-
-# git config
-if ask ".gitconfig?"; then
-    ln -s "$(realpath ".gitconfig")" ~/.gitconfig
-fi
-
-# Tmux conf
-# if ask ".tmux.conf?"; then
-#     ln -s "$(realpath ".tmux.conf")" ~/.tmux.conf
-# fi
-
-# vim conf
-if ask ".vimrc?"; then
-    ln -s "$(realpath ".vimrc")" ~/.vimrc
-fi
